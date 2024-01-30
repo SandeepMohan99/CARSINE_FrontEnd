@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Servicepage from './pages/Servicepage';
 import Autodetailpage from './pages/Autodetailpage'
 import Expressintpage from './pages/Expressintpage';
+import Dashboard from './pages/Dashboard';
 function App() {
   return (
     <div>
@@ -22,6 +23,7 @@ function App() {
         <Route path='/servicepage' element={<Servicepage/>}/>
         <Route path='/autodetail' element={<Autodetailpage/>}/>
         <Route path='/expressint' element={<Expressintpage/>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
       </Routes>
       <Footer/>
     </div>

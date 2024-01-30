@@ -1,0 +1,24 @@
+.input-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 18px; /* Increase font size */
+    margin-bottom: 20px;
+  }
+  
+  .radio-options {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .radio-option {
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .radio-option {
+      width: 50%; /* Two options per row on smaller screens */
+    }
+  }
+  

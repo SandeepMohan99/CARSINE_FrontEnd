@@ -9,7 +9,7 @@ function Servicepage() {
              <div>
                <h1 className='mt-5' style={{ color: '#ffffff', opacity: 1,fontSize:'5rem' }}>Form Wash</h1>       
               </div>
-           </div>
+        </div>
         <div className='container mb-5'>
             <div className="row">
                
@@ -88,14 +88,11 @@ function Servicepage() {
                   <div className='mt-5 ms-2 d-flex justify-content-center align-items-center' style={{backgroundColor:'#EF530F', width:'105%', height:'30vh'}}>
                       <div className=' d-flex'>
                         <h2 style={{color:'#ffffff'}} className='me-3'>Easy Online Carwash Booking System</h2>
-                      <Link to={'login'}><Button style={{backgroundColor:'#02489d'}} size="lg">
+                      <Link to={'/login'}><Button style={{backgroundColor:'#02489d'}} size="lg">
                              Book Appoinment
                            </Button>{' '}</Link>
                       </div>
                   </div>
-
-
-
                 </div>
                 
             </div>

@@ -28,7 +28,7 @@ function Service() {
                 
               </div>
 
-          </div>
+        </div>
     </>
   )
 }
