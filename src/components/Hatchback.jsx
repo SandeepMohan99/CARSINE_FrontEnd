@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useState } from 'react';
@@ -13,6 +13,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { addBookingAPI } from '../Services/allAPI';
 
 
 
@@ -22,8 +25,17 @@ function Hatchback() {
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () =>{ setShow(false); handleClose1()}
   const handleShow = () => setShow(true);
+  
+  /* state to store toke for appending with header */
+   
+   const [token, setToken] = useState("")
+
+   useEffect(()=>{
+    setToken(sessionStorage.getItem("token"))
+   },[])
+   console.log(token); 
 
   /* state to store booking details */
 
@@ -35,10 +47,81 @@ function Hatchback() {
     vehiclenumber:"",
     date:"",
     time:"",
-    wash:[]
+    wash:[],
+    detail:[],
+    interior:[],
+    cartype:"Hatch Back"
   }) 
 
-  console.log(bookingDetails);
+  //console.log(bookingDetails);
+   
+  const handleClose1 = ()=>{
+
+    setBookingDetails({
+      username:"",
+      mobilenumber:"",
+      email:"",
+      vehiclenumber:"",
+      date:"",
+      time:"",
+      wash:[],
+      detail:[],
+      interior:[],
+    })
+
+  }
+
+  const handleAdd = async (e)=>{
+        e.preventDefault()
+
+        const{username,mobilenumber,email,vehiclenumber,date,time,wash,detail,interior,cartype}= bookingDetails
+
+        if(!username || !mobilenumber || !email || !vehiclenumber || !date || !time|| !wash|| !detail|| !interior ){
+            
+          toast.info('Please fill the form completely')    
+        }
+
+        else{
+              
+            /* reqbody */
+            /* if there is any any uploading content from the system
+            we should send the body in the form of form data */
+
+           const reqBody = new FormData()
+
+            /* add value to the form data using append() */
+            
+            reqBody.append("username",username)
+            reqBody.append("mobilenumber",mobilenumber)
+            reqBody.append("email",email)
+            reqBody.append("vehiclenumber",vehiclenumber)
+            reqBody.append("date",date)
+            reqBody.append("time",time)
+            reqBody.append("wash",wash)
+            reqBody.append("detail",detail)
+            reqBody.append("interior",interior)
+            reqBody.append("cartype",cartype)
+           if(token) {
+            
+                const reqHeader = {          
+                "Content-Type":"application/json",
+                "Authorization":`Bearer ${token}`            
+                }
+                const result = await addBookingAPI(reqBody,reqHeader)
+                console.log(result);
+                if (result.status===200) {
+                  toast.success('Booking Successfully Added')
+                   handleClose()
+                } else {
+                  console.log(result);
+                  alert('result.response.data')
+                }
+
+            }
+        }
+
+  }
+
 
   /* time slot selection */
 
@@ -88,13 +171,13 @@ function Hatchback() {
   ];
 
 
-  
+ 
   return (
      
     <>
 
     <Card className='shadow' style={{ width: '20rem' }}>
-      <Card.Img className='p-4' variant="top" src="https://nationwideautotransportation.com/blog/wp-content/uploads/2023/04/11.jpg" />
+      <Card.Img className='p-4' variant="top" src="https://nationwideautotransportation.com/blog/wp-content/uploads/2023/04/7.jpg" />
       <Card.Body>
       <Card.Title className='fs-3 '>Our Pricing</Card.Title>
       <Card.Text>
@@ -121,30 +204,43 @@ function Hatchback() {
         <Modal.Body>
 
         <Form className="border border-seconday rounded p-3">
-            <Row className=''>
-              <Col>
-                  <Form.Control type='text' placeholder="Enter Name" value={bookingDetails.username} onChange={(e)=>setBookingDetails({...bookingDetails,username:e.target.value})}/>
-              </Col>
-              <Col>
-                  <Form.Control type='text' placeholder="Mobile Number" value={bookingDetails.mobilenumber} onChange={(e)=>setBookingDetails({...bookingDetails,mobilenumber:e.target.value})}/>
-              </Col>
-            </Row>
+              <Row>
+                  <Col>
+                    <Form.Control type='text' placeholder="Enter Name" value={bookingDetails.username} onChange={(e) => setBookingDetails({ ...bookingDetails, username: e.target.value })} />
+                  </Col>
+                  <Col>
+                    <Form.Control type='text' placeholder="Mobile Number" pattern="[0-9]{10}" title="Mobile number should contain only digits (0-9) and should be 10 characters long." value={bookingDetails.mobilenumber} onChange={(e) => setBookingDetails({ ...bookingDetails, mobilenumber: e.target.value })} isInvalid={bookingDetails.mobilenumber && !/^[0-9]{10}$/.test(bookingDetails.mobilenumber)} />
+                    <Form.Control.Feedback type="invalid">Please enter a valid 10-digit mobile number.</Form.Control.Feedback>
+                  </Col>
+                </Row>
 
-            <Row className='mt-3'>
-              <Col>
-                  <Form.Control type='email' placeholder="Enter Email id" value={bookingDetails.email} onChange={(e)=>setBookingDetails({...bookingDetails,email:e.target.value})}/>
-              </Col>
-              <Col>
-                  <Form.Control type='text' placeholder="Enter Vehicle Number" value={bookingDetails.vehiclenumber} onChange={(e)=>setBookingDetails({...bookingDetails,vehiclenumber:e.target.value})}/>
-              </Col>
-            </Row>
+                <Row className='mt-3'>
+                  <Col>
+                  <Form.Control type='email' placeholder="Enter Email id" value={bookingDetails.email} onChange={(e) => setBookingDetails({ ...bookingDetails, email: e.target.value })} isInvalid={bookingDetails.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bookingDetails.email)} />
+                  <Form.Control.Feedback type="invalid">Please enter a valid email address.</Form.Control.Feedback>
+                  </Col>
+                  <Col>
+                  <Form.Control
+                        type='text'
+                        placeholder="Enter Vehicle Number (KL-08-AZ-1234)"
+                        pattern="[A-Za-z0-9]*"
+                        title="Vehicle number should contain only alphabets and digits (0-9)."
+                        value={bookingDetails.vehiclenumber}
+                        onChange={(e) => setBookingDetails({ ...bookingDetails, vehiclenumber: e.target.value })}
+                        isInvalid={bookingDetails.vehiclenumber && !/^[A-Z]{2}[ -]?[0-9]{2}[ -]?[A-Z]{1,2}[ -]?[0-9]{4}$/.test(bookingDetails.vehiclenumber)}
+                      />
+                    <Form.Control.Feedback type="invalid">Please enter a valid vehicle number.</Form.Control.Feedback>
+                  </Col>
+                </Row>
+
 
             <Row className='mt-2 w-100 text-center'>
                 <h4>Select Your Time</h4>
             </Row>
 
+              {/* time slot */}
             <Row>
-            {/* time slot */}
+           
              
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <div style={{ marginRight: '20px' }}>
@@ -177,108 +273,260 @@ function Hatchback() {
 
               
             </Row>
-
+    
+            {/* Select Your Services */}
             <Row >
                
                <div className='mt-3 w-100 text-center'>                
                 <h4>Select Your Services</h4>               
                </div>
                
-                <Row>
-  
-                  <div className="input-container ">
-                    <label className='me-2'><h5>Select Your Wash :</h5></label>
-                    <div className="radio-options mt-3">
-                      <label className="radio-option">
-                            <input 
-                            type="checkbox" 
-                            name="normalwash" 
-                            value="normalWash" 
-                            onChange={(e) => {
-                              const isChecked = e.target.checked;
-                              const value = e.target.value;
+                    {/* car wash */}
+                    <Row>
+      
+                      <div className="input-container ">
+                        <label className='me-2'><h5>Select Your Wash :</h5></label>
+                        <div className="radio-options mt-3">
+                          <label className="radio-option">
+                                <input 
+                                type="checkbox" 
+                                name="normalwash" 
+                                value="Normal-Wash" 
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const value = e.target.value;
 
-                              setBookingDetails(prevState => {
-                                if (isChecked) {
-                                  // Add the value to the wash array if the checkbox is checked
-                                  return { ...prevState, wash: [...prevState.wash, value] };
-                                } else {
-                                  // Remove the value from the wash array if the checkbox is unchecked
-                                  return { ...prevState, wash: prevState.wash.filter(item => item !== value) };
-                                }
-                              });
-                            }}
-                          />
-                        Normal Wash
-                      </label>
-                      <label className="radio-option">
-                        <input type="checkbox" name="wash" value="foamWash" />
-                        Foam Wash
-                      </label>
-                    </div>
-                  </div>
-                </Row>
+                                  setBookingDetails(prevState => {
+                                    if (isChecked) {
+                                      // Add the value to the wash array if the checkbox is checked
+                                      return { ...prevState, wash: [...prevState.wash, value] };
+                                    } else {
+                                      // Remove the value from the wash array if the checkbox is unchecked
+                                      return { ...prevState, wash: prevState.wash.filter(item => item !== value) };
+                                    }
+                                  });
+                                }}
+                              />
+                            Normal Wash
+                          </label>
+                          <label className="radio-option">
+                          <input 
+                                type="checkbox" 
+                                name="formwash" 
+                                value="Form-wash" 
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const value = e.target.value;
 
-                <Row>
-  
-                  <div className="input-container ">
-                    <label className='me-2'><h5>Select AutoDetailing Services :</h5></label>
-                    <div className="radio-options mt-3">
-                      <label className="radio-option">
-                        <input type="checkbox" name="veramic" value="ceramic-coating" />
-                        Ceramic Coating
-                      </label>
-                      <label className="radio-option">
-                        <input type="checkbox" name="ppfcoating" value="ppf-coating" />
-                        PPF Coating
-                      </label>
-                      <label className="radio-option">
-                        <input type="checkbox" name="carwaxing" value="car-waxing" defaultChecked />
-                        Car Waxing
-                      </label>
-                      <label className="radio-option">
-                        <input type="checkbox" name="scrachremoval" value="scrach-removal" />
-                        Scrach Removal
-                      </label>
-                    </div>
-                  </div>
-                </Row>
+                                  setBookingDetails(prevState => {
+                                    if (isChecked) {
+                                      // Add the value to the wash array if the checkbox is checked
+                                      return { ...prevState, wash: [...prevState.wash, value] };
+                                    } else {
+                                      // Remove the value from the wash array if the checkbox is unchecked
+                                      return { ...prevState, wash: prevState.wash.filter(item => item !== value) };
+                                    }
+                                  });
+                                }}
+                              />
+                            Foam Wash
+                          </label>
+                        </div>
+                      </div>
+                    </Row>
+                    
+                    {/* car exterior cleaning */}
+                    <Row>
+                          <div className="input-container ">
+                            <label className='me-2'><h5>Select AutoDetailing Services :</h5></label>
+                            <div className="radio-options mt-3">
+                              <label className="radio-option">
+                                <input 
+                                  type="checkbox" 
+                                  name="ceramic" 
+                                  value="Ceramic-Coating" 
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
 
+                                    setBookingDetails(prevState => {
+                                      if (isChecked) {
+                                        // Add the value to the detail array if the checkbox is checked
+                                        return { ...prevState, detail: [...prevState.detail, value] };
+                                      } else {
+                                        // Remove the value from the detail array if the checkbox is unchecked
+                                        return { ...prevState, detail: prevState.detail.filter(item => item !== value) };
+                                      }
+                                    });
+                                  }}
+                                />
+                                Ceramic Coating
+                              </label>
+                              <label className="radio-option">
+                                <input 
+                                  type="checkbox" 
+                                  name="PPF Coating" 
+                                  value="PPF-Coating" 
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
 
-                <Row>
-  
-                  <div className="input-container">
-                    <label className='me-2'><h5>Select Interior Services :</h5></label>
-                    <div className="radio-options mt-3">
-                      <label className="radio-option">
-                        <input type="checkbox" name="veramic" value="ceramic-coating" />
-                        Basic Interior Cleaning
-                      </label>
-                      <label className="radio-option">
-                        <input type="checkbox" name="carwaxing" value="car-waxing" defaultChecked />
-                        Air Vent and Duct Cleaning
-                      </label>
-                      <label className="radio-option">
-                        <input type="checkbox" name="scrachremoval" value="scrach-removal" />
-                        Interior Odor Removal
-                      </label>
-                    </div>
-                  </div>
-                </Row>
-               
+                                    setBookingDetails(prevState => {
+                                      if (isChecked) {
+                                        // Add the value to the detail array if the checkbox is checked
+                                        return { ...prevState, detail: [...prevState.detail, value] };
+                                      } else {
+                                        // Remove the value from the detail array if the checkbox is unchecked
+                                        return { ...prevState, detail: prevState.detail.filter(item => item !== value) };
+                                      }
+                                    });
+                                  }}
+                                />
+                                PPF Coating
+                              </label>
+                              <label className="radio-option">
+                                <input 
+                                  type="checkbox" 
+                                  name="CarWaxing" 
+                                  value="Car-Waxing" 
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    setBookingDetails(prevState => {
+                                      if (isChecked) {
+                                        // Add the value to the detail array if the checkbox is checked
+                                        return { ...prevState, detail: [...prevState.detail, value] };
+                                      } else {
+                                        // Remove the value from the detail array if the checkbox is unchecked
+                                        return { ...prevState, detail: prevState.detail.filter(item => item !== value) };
+                                      }
+                                    });
+                                  }}
+                                />
+                                Car Waxing
+                              </label>
+                              <label className="radio-option">
+                                <input 
+                                  type="checkbox" 
+                                  name="Scrach Removal" 
+                                  value="Scrach-Removal" 
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked;
+                                    const value = e.target.value;
+
+                                    setBookingDetails(prevState => {
+                                      if (isChecked) {
+                                        // Add the value to the detail array if the checkbox is checked
+                                        return { ...prevState, detail: [...prevState.detail, value] };
+                                      } else {
+                                        // Remove the value from the detail array if the checkbox is unchecked
+                                        return { ...prevState, detail: prevState.detail.filter(item => item !== value) };
+                                      }
+                                    });
+                                  }}
+                                />
+                                Scratch Removal
+                              </label>
+                            </div>
+                          </div>
+                    </Row>
+
+                    {/* car interior */}
+                    <Row>
+                        <div className="input-container">
+                          <label className='me-2'><h5>Select Interior Services :</h5></label>
+                          <div className="radio-options mt-3">
+                            <label className="radio-option">
+                              <input 
+                                type="checkbox" 
+                                name="Inteior Cleaning" 
+                                value="Inteior-Cleaning" 
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const value = e.target.value;
+
+                                  setBookingDetails(prevState => {
+                                    if (isChecked) {
+                                      // Add the value to the interior array if the checkbox is checked
+                                      return { ...prevState, interior: [...prevState.interior, value] };
+                                    } else {
+                                      // Remove the value from the interior array if the checkbox is unchecked
+                                      return { ...prevState, interior: prevState.interior.filter(item => item !== value) };
+                                    }
+                                  });
+                                }}
+                              />
+                              Basic Interior Cleaning
+                            </label>
+                            <label className="radio-option">
+                              <input 
+                                type="checkbox" 
+                                name="AC Duct Cleaning" 
+                                value="AC-Duct-Cleaning" 
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const value = e.target.value;
+
+                                  setBookingDetails(prevState => {
+                                    if (isChecked) {
+                                      // Add the value to the interior array if the checkbox is checked
+                                      return { ...prevState, interior: [...prevState.interior, value] };
+                                    } else {
+                                      // Remove the value from the interior array if the checkbox is unchecked
+                                      return { ...prevState, interior: prevState.interior.filter(item => item !== value) };
+                                    }
+                                  });
+                                }}
+                              />
+                              Air Vent and Duct Cleaning
+                            </label>
+                            <label className="radio-option">
+                              <input 
+                                type="checkbox" 
+                                name="Odour Removal" 
+                                value="Odour-Removal" 
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const value = e.target.value;
+
+                                  setBookingDetails(prevState => {
+                                    if (isChecked) {
+                                      // Add the value to the interior array if the checkbox is checked
+                                      return { ...prevState, interior: [...prevState.interior, value] };
+                                    } else {
+                                      // Remove the value from the interior array if the checkbox is unchecked
+                                      return { ...prevState, interior: prevState.interior.filter(item => item !== value) };
+                                    }
+                                  });
+                                }}
+                              />
+                              Interior Odor Removal
+                            </label>
+                          </div>
+                        </div>
+                    </Row>              
             </Row>
 
         </Form>
           
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+        <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary">Confirm Booking</Button>
+          <Button variant="secondary" onClick={handleClose1}>
+            Clear
+          </Button>
+          <Button variant="primary" onClick={handleAdd}>Confirm Booking</Button>
         </Modal.Footer>
       </Modal>
-    
+      <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            theme="colored"
+             />
+          
 
     </>
 

@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
@@ -17,9 +17,14 @@ function Header() {
     navigate('')
   }
 
-  const[token,setToken] = useState(sessionStorage.getItem("token"))
+   /* to store  token*/
+  const[islogin,setIsLogin] = useState(false)
 
-
+    useEffect(()=>{
+     if (sessionStorage.getItem("token")) {
+        setIsLogin(sessionStorage.getItem("token"))
+     }
+    },[islogin])
   
 
 
@@ -56,10 +61,10 @@ function Header() {
           </Nav>
           <Form className="d-flex">
 
-           { token?          
+          { islogin?          
            <Button onClick={handleLogout} variant="btn btn-warning"><i class="fa-solid fa-power-off me-1" ></i>SignOut</Button>:
            <Link to={'/login'}> <Button variant="btn btn-warning">Appointment</Button></Link>
-            }
+           }
 
           </Form>
         </Navbar.Collapse>

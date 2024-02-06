@@ -14,3 +14,8 @@ export const registerAPI = async(user)=>{
 export const loginAPI = async(user)=>{
   return await commonAPI("POST",`${base_url}/users/login`,user,"")
 }
+
+/* add booking */
+export const addBookingAPI = async(reqBody,reqHeader)=>{
+  return await commonAPI("POST",`${base_url}/booking/add`,reqBody,reqHeader)
+}

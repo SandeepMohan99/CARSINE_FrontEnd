@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sedan from '../components/Sedan'
 import Hatchback from '../components/Hatchback'
 import Suv from '../components/Suv'
-import { Col, Row } from 'react-bootstrap'
+
 
 function Appointment() {
+  
+   const [username,setUsername] = useState("")
+   useEffect(()=>{
+    setUsername(JSON.parse(sessionStorage.getItem('existingUser')).username)
+   })
+
   return (
     <>
 
@@ -12,8 +18,8 @@ function Appointment() {
         </div>
 
         <div className='ms-5 mb-5'>
-          <h4 className='mt-5'>Choose Your Car</h4>
-          <h1 className='mt-5'>Select Your Vehicle Type</h1>
+          <h1 className='mt-5'>Welcome <span className='text-warning'>{username}</span></h1>
+          <h4 className='mt-5'>Select Your Vehicle Type</h4>
         </div>
     
           <div className="container mt-5 mb-5">
