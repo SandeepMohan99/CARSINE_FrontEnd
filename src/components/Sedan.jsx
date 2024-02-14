@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useState } from 'react';
@@ -16,11 +16,14 @@ import 'react-time-picker/dist/TimePicker.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addBookingAPI } from '../Services/allAPI';
+import { addUserContext } from '../Context/ContextShare';
 
 
 function Sedan() {
 
- 
+ /* useContext Hook */
+
+ const {addUserResponse,setUserResponse} = useContext(addUserContext)
   const [show, setShow] = useState(false);
 
   const handleClose = () =>{ setShow(false); handleClose1()}
@@ -110,6 +113,7 @@ function Sedan() {
                 if (result.status===200) {
                   toast.success('Booking Successfully Added')
                    handleClose()
+                   addUserResponse(result.data)
                 } else {
                   console.log(result);
                   alert('result.response.data')

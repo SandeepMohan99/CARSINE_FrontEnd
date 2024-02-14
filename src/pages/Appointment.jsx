@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Sedan from '../components/Sedan'
 import Hatchback from '../components/Hatchback'
 import Suv from '../components/Suv'
+import { Link } from 'react-router-dom'
 
 
 function Appointment() {
@@ -31,6 +32,10 @@ function Appointment() {
              
               <div className="col-md-4 sm-12 d-flex align-items-center justify-content-center"><Suv/></div>
              
+            </div>
+
+            <div className='mt-5 ms-3'>
+             <Link to={'/dashboard'}> <button className='btn btn-primary p-2'>Go To Dashboard</button></Link>
             </div>
           </div>
 
