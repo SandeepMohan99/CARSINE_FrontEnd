@@ -25,7 +25,7 @@ function Hatchback() {
 
   /* useContext hook */
 
-  const {addUserResponse,setUserResponse} = useContext(addUserContext)
+  /* const {addUserResponse,setUserResponse} = useContext(addUserContext) */
 
 
   const [show, setShow] = useState(false);
@@ -117,10 +117,10 @@ function Hatchback() {
                 if (result.status===200) {
                   toast.success('Booking Successfully Added')
                    handleClose()
-                   setUserResponse(result.data)
+                   /* setUserResponse(result.data) */
                 } else {
                   console.log(result);
-                  alert('result.response.data')
+                  alert(result.response.data)
                 }
 
             }
@@ -153,6 +153,8 @@ function Hatchback() {
     }));
     console.log('Booking Date:', formattedDate);
     console.log('Booking Time:', selectedTimeSlot);
+
+    
   };
 
   // Function to disable Sundays
@@ -272,7 +274,7 @@ function Hatchback() {
                       </select>
                   </div>
                   <div >
-                  <button className="btn btn-primary ms-3 btn-sm" onClick={handleConfirmBooking}>Check Availability</button>
+                  <button className="btn btn-primary ms-3 btn-sm" onClick={handleConfirmBooking}>Confirm Slot</button>
                 </div>
             </div>
 

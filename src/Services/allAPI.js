@@ -30,3 +30,4 @@ export const userBookingAPI = async(reqHeader)=>{
 export const deleteBookingAPI = async(userId, reqHeader)=>{
   return await commonAPI("DELETE",`${base_url}/user/remove/${userId}`,{},reqHeader)
 }
+

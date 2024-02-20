@@ -22,7 +22,7 @@ function Suv() {
 
 
    /* usecontext hook */
-   const {addUserResponse,setUserResponse} = useContext(addUserContext)
+  /*  const {addUserResponse,setUserResponse} = useContext(addUserContext) */
 
   const [show, setShow] = useState(false);
 
@@ -113,7 +113,7 @@ function Suv() {
                 if (result.status===200) {
                   toast.success('Booking Successfully Added')
                    handleClose()
-                   addUserResponse(result.data)
+                  /*  setUserResponse(result.data) */
                 } else {
                   console.log(result);
                   alert('result.response.data')
@@ -256,7 +256,7 @@ function Suv() {
                       </select>
                   </div>
                   <div >
-                  <button className="btn btn-primary ms-3 btn-sm" onClick={handleConfirmBooking}>Check Availability</button>
+                  <button className="btn btn-primary ms-3 btn-sm" onClick={handleConfirmBooking}>Confirm Slot</button>
                 </div>
             </div>
 

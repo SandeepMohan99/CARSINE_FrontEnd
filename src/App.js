@@ -11,6 +11,9 @@ import Servicepage from './pages/Servicepage';
 import Autodetailpage from './pages/Autodetailpage'
 import Expressintpage from './pages/Expressintpage';
 import Dashboard from './pages/Dashboard';
+import Hatchprice from './pages/Hatchprice';
+import Sedanprice from './pages/Sedanprice';
+import Suvprice from './pages/Suvprice';
 function App() {
   return (
     <div>
@@ -24,6 +27,9 @@ function App() {
         <Route path='/autodetail' element={<Autodetailpage/>}/>
         <Route path='/expressint' element={<Expressintpage/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/hatchprice' element={<Hatchprice/>}/>
+        <Route path='/sedanprice' element={<Sedanprice/>}/>
+        <Route path='/suvprice' element={<Suvprice/>}/>
       </Routes>
       <Footer/>
     </div>

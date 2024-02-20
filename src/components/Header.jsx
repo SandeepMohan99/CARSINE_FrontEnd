@@ -49,15 +49,13 @@ function Header() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1">Home</Nav.Link>
+            <Nav.Link href='/'>Home</Nav.Link>
             <Nav.Link href="#action2">About</Nav.Link>
-            <NavDropdown title="Services" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">All Services</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">Service Details</NavDropdown.Item>
+            <NavDropdown title="Our Price List" id="navbarScrollingDropdown">
+              <NavDropdown.Item href="/hatchprice">Hatch Back</NavDropdown.Item>
+              <NavDropdown.Item href="/sedanprice">Sedan</NavDropdown.Item>
+              <NavDropdown.Item href="/suvprice">Suv</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="#" disabled>
-              Link
-            </Nav.Link>
           </Nav>
           <Form className="d-flex">
 
@@ -75,3 +73,7 @@ function Header() {
 }
 
 export default Header
+
+/* <Nav.Link href="#" disabled>
+              Link
+            </Nav.Link> */

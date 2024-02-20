@@ -6,7 +6,7 @@ import { addUserContext } from '../Context/ContextShare';
 function Dashboard() {
 
   /* usecontext hook */
-  const {addUserResponse,setUserResponse} = useContext(addUserContext)
+  /* const {addUserResponse,setUserResponse} = useContext(addUserContext) */
 
   const [userData,setUserData] = useState([])
 
@@ -34,7 +34,7 @@ function Dashboard() {
       "Authorization":`Bearer ${token}`            
       }
 
-      const result = deleteBookingAPI(id,reqHeader)
+      const result = await deleteBookingAPI(id,reqHeader)
       console.log(result);
       if (result.status===200) {
         getUserData()
@@ -46,7 +46,7 @@ function Dashboard() {
 
   useEffect(()=>{
    getUserData()
-  },[addUserResponse])
+  },[])
   return (
     <>
       <div className='container mt-5 mb-5'>       
@@ -57,7 +57,7 @@ function Dashboard() {
 
       <Table striped bordered hover>
       <thead>
-        <tr>
+        <tr className='text-center'>
           <th>User Name</th>
           <th>Mobile Number</th>
           <th>Email</th>
@@ -95,8 +95,8 @@ function Dashboard() {
           </tr>
         )):
          <tr>
-          <td>
-           Nothing To Display
+          <td className='text-center' colSpan={8}>
+          No Bookings Yet
           </td>
          </tr>
         }
